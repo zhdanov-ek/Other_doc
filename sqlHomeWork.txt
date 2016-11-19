@@ -1,0 +1,63 @@
+1. Easy
+Выбрать всех водителей, возраст которых > 25 лет
+Выбрать всех водителей, возраст которых > 25 лет и < 45
+Выбрать квартиры, которые расположены на 1 этаже
+Выбрать квартиры, в которых больше 2 комнат
+Выбрать машины, длина которых больше 4 метров
+Выбрать машины, который были произведены после 2008 года
+
+SELECT * FROM people WHERE ((2016 - year) > 25);
+SELECT * FROM people WHERE (((2016 - year) > 25) and ((2016 - year) < 45));
+SELECT * FROM flats WHERE (floor = 1);
+SELECT * FROM flats WHERE (rooms > 2);
+SELECT * FROM cars WHERE (width > 190);
+SELECT * FROM cars WHERE (year_created > 2008);
+
+
+2. Middle
+Посчитать количество водителей в базе
+Узнать возраст самого молодого водителя
+Узнать количество трехкомнатных квартир в базе 
+Узнать средний возраст водителей (функция AVG)
+Узнать суммарную ширину всех машин (функция SUM)
+Выбрать водителей имена которых начинается на букву “А”
+Выбрать водителей которые имеют букву “T” в фамилии
+
+SELECT count() FROM people;
+SELECT (2016 - max(year)) FROM people;
+SELECT count() FROM flats WHERE rooms = 3;
+SELECT avg(2016 - year) FROM people;
+SELECT sum(width) FROM cars;
+SELECT * FROM people WHERE name LIKE "A%";
+SELECT * FROM people WHERE soname LIKE "%t%";
+
+3. Hard
+Выбрать машины, водители которых живут в трехкомнатных квартирах
+SELECT * FROM cars
+WHERE people_id IN 
+    (SELECT id FROM people
+    WHERE flat_id IN 
+        (SELECT id FROM flats
+            WHERE rooms = 2))
+            
+Выбрать водителей у которых больше чем одна машина
+
+SELECT count(cars.id) AS allCars, people.name, people.soname FROM cars
+LEFT JOIN people ON cars.people_id = people.id
+GROUP BY cars.people_id
+HAVING allCars > 1
+
+Выбрать квартиры в которых живет водители, которые родились после 2000 года
+SELECT * FROM flats 
+WHERE id IN
+    (SELECT flat_id FROM people
+    WHERE year > 2000)
+    
+Выбрать квартиры в которых живут водители, которые ездят на машинах, которые были выпущены после 2012 года!!!!
+SELECT * FROM flats
+WHERE id IN (
+    SELECT flat_id FROM people
+    WHERE id IN
+        (SELECT people_id FROM cars
+        WHERE year_created > 2012))
+
